@@ -1,0 +1,30 @@
+{
+  "name": "CursoAPI-NJ",
+  "version": "1.0.0",
+  "description": "Curso CF Servicios Web con NJ y ExpressJs",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsebascalle/CursoAPI-NJ.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsebascalle/CursoAPI-NJ/issues"
+  },
+  "homepage": "https://github.com/jsebascalle/CursoAPI-NJ#readme",
+  "dependencies": {
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.5.11",
+    "mongoose-paginate": "^5.0.3",
+    "morgan": "~1.9.1",
+    "serve-favicon": "^2.5.0"
+  }
+}
