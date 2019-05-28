@@ -1,4 +1,6 @@
 const Place = require("../models/Place").Place;
+const upload = require("../config/upload");
+
 
 let attributes = ['title','description','acceptsCreditCard','coverImage','avatarImage','openHour','closeHour'];
 
@@ -24,7 +26,7 @@ module.exports = {
   show: function(req,res){
       res.json(req.place);
   },
-  store: function(req,res){
+  store: function(req,res,next){
 
     let placeParams = {};
     attributes.forEach(attr=>{
@@ -33,10 +35,11 @@ module.exports = {
     });
 
     Place.create(placeParams).then(place=>{
-       res.json(place);
+       req.place = place;
+       next();
     }).catch(err=>{
        console.log(err);
-       res.json(err);
+       next(err);
     })
   },
   update: function(req,res){
@@ -64,5 +67,37 @@ module.exports = {
          console.log(err);
          res.json(err);
       });
+  },
+  multerMiddleware: function(){
+    return upload.fields([
+      {name:'avatarImage',maxCount:1},
+      {name:'coverImage',maxCount:1}
+    ])
+  },
+  saveImage: function(req,res){
+    if (req.place) {
+      const files = ["avatarImage","coverImage"];
+      const promises = [];
+
+      files.forEach(imageType=>{
+        if (req.files && req.files[imageType]) {
+          const path = req.files[imageType][0].path;
+          req.place.updateImage(path,imageType);
+        }
+      });
+
+      Promise.all(promises).then(results=>{
+        console.log(results);  
+        res.json(req.place);
+      }).catch(err=>{
+        console.log(err);
+        res.json(err);
+      });
+
+    }else{
+      res.status(422).json({
+        error: req.error || "No se pudo guardar la imagen"
+      })
+    }
   }
 };

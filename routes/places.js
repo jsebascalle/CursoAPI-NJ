@@ -6,7 +6,7 @@ const PlacesController = require("../controllers/PlacesController");
 
 /* GET users listing. */
 router.route('/').get(PlacesController.index)
-                 .post(PlacesController.store);
+                 .post(PlacesController.multerMiddleware(),PlacesController.store,PlacesController.saveImage);
 
 router.route('/:id').get(PlacesController.find,PlacesController.show)
                     .put(PlacesController.find,PlacesController.update)

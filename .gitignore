@@ -1,5 +1,6 @@
 config/secrets.js
 
+uploads/*
 # Logs
 logs
 *.log
