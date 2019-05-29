@@ -15,13 +15,12 @@ module.exports = {
       next(err);
     });*/
   },
-  index: function(req,res){
-    /*Place.paginate({},{page:req.query.page || 1, limit:8, sort:{'_id':-1} }).then(places=>{
-      res.json(places);
+  index: function (req,res){
+    User.find({}).then(results=>{
+      res.json(results);
     }).catch(err=>{
-      console.log(err);
-      res.json(err);
-    });*/
+        res.status(500).json({error});
+    })
   },
   show: function(req,res){
       //res.json(req.place);

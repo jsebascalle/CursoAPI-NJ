@@ -3,6 +3,7 @@ const mongoosePaginate = require("mongoose-paginate");
 const Uploader = require("./Uploader");
 const Schema = mongoose.Schema
 const slugify = require("../plugins/slugify");
+const Visit = require('./Visit');
 
 let placeSchema = new Schema({
   title: {type:String,required:"El nombre es obligatorio"},
@@ -41,14 +42,19 @@ placeSchema.methods.saveImageUrl = function(secure_url,imageType){
 placeSchema.pre('save',function(next){
   if (this.slug) return next();
   generateSlugAndContinue.call(this,0,next);
-})
+});
 
 placeSchema.statics.validateSlugCount = function(slug){
   return Place.countDocuments({slug:slug}).then(count=>{
     if (count > 0) return false;
     return true;
   });
-}
+};
+
+placeSchema.virtual('visits').get(function(){
+  return Visit.find({'_place': this._id}).sort('-id');
+});
+
 
 function generateSlugAndContinue(count,next){
   this.slug = slugify(this.title);

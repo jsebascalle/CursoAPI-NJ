@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const mongooseBcrypt = require("mongoose-bcrypt");
 const Place = require("./Place");
+const FavoritePlace = require('../models/FavoritePlace');
 
 var Schema = mongoose.Schema
 
@@ -35,14 +36,14 @@ userSchema.virtual('places').get(function(){
   return Place.find({'_user': this._id});
 });
 
-/*userSchema.virtual('favorites').get(function(){
+userSchema.virtual('favorites').get(function(){
   return FavoritePlace.find({'_user': this._id},{'_place': true})
-          .then(favs =>{
-            let placeIds = favs.map(fav => fav._place);
+    .then(favs =>{
+      let placeIds = favs.map(fav => fav._place);
 
-            return Place.find({'_id': {$in: placeIds }})
-          })
-})*/
+      return Place.find({'_id': {$in: placeIds }})
+    })
+});
 
 
 let User = mongoose.model("User",userSchema);

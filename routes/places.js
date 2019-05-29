@@ -6,6 +6,7 @@ const authenticateOwner = require('../middlewares/authenticateOwner');
 
 
 /* GET users listing. */
+
 router.route('/').get(PlacesController.index)
                  .post(PlacesController.multerMiddleware(),PlacesController.store,PlacesController.saveImage);
 
