@@ -1,14 +1,16 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const UsersController = require("../controllers/UsersController");
+const AuthController = require("../controllers/AuthController");
 
 /* GET users listing. */
-router.get('/users', function(req, res, next) {
-  res.json({"nombre":"Juan","apellido":"calle","otro":"este"});
-});
+router.get('/places',UsersController.myPlaces)
 
-router.post('/users', function(req, res) {
-  console.log(req.body.name);
-  res.send(req.body.name);
-});
+router.route('/').post(UsersController.store,AuthController.generateToken,AuthController.sendToken);
+
+router.route('/:id').get(UsersController.find,UsersController.show)
+                    .put(UsersController.find,UsersController.update)
+                    .delete(UsersController.find,UsersController.destroy);
 
 module.exports = router;

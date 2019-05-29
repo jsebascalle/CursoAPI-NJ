@@ -6,6 +6,8 @@ var logger = require('morgan');
 var favicon = require('serve-favicon');
 var db = require('./config/database');
 var routes = require('./routes/routes');
+var jwtMiddleware = require("express-jwt");
+var secrets = require("./config/secrets");
 //conexion
 db.connect();
 //Instancias
@@ -16,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 //rutas
+app.use(jwtMiddleware({secret:secrets.jwtSecret}).unless({path:['/auth','/users'],method:'GET'}));
 app.use('/', routes);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,14 +1,16 @@
-const Place = require("../models/Place").Place;
+const Place = require("../models/Place");
 const upload = require("../config/upload");
+const helpers = require("./helpers");
 
 
-let attributes = ['title','description','acceptsCreditCard','coverImage','avatarImage','openHour','closeHour'];
+const validParams = ['title','description','acceptsCreditCard','coverImage','avatarImage','openHour','closeHour','address'];
 
 module.exports = {
   find: function(req,res, next){
-    Place.findById(req.params.id)
+    Place.findOne({slug:req.params.id})
     .then(place=>{
       req.place = place;
+      req.mainObj = place;
       next();
     }).catch(err=>{
       console.log(err);
@@ -27,14 +29,9 @@ module.exports = {
       res.json(req.place);
   },
   store: function(req,res,next){
-
-    let placeParams = {};
-    attributes.forEach(attr=>{
-        if(Object.prototype.hasOwnProperty.call(req.body,attr))
-            placeParams[attr] = req.body[attr];
-    });
-
-    Place.create(placeParams).then(place=>{
+    let params = helpers.paramsBuilder(validParams,req.body);
+    params['_user'] = req.user.id;
+    Place.create(params).then(place=>{
        req.place = place;
        next();
     }).catch(err=>{
@@ -43,14 +40,7 @@ module.exports = {
     })
   },
   update: function(req,res){
-
-    let placeParams = {};
-    attributes.forEach(attr=>{
-        if(Object.prototype.hasOwnProperty.call(req.body,attr))
-            placeParams[attr] = req.body[attr];
-    });
-
-    req.place = Object.assign(req.place,placeParams);
+    req.place = Object.assign(req.place,helpers.paramsBuilder(validParams,req.body));
 
     req.place.save().then(place=>{
       res.json(place);
@@ -82,12 +72,12 @@ module.exports = {
       files.forEach(imageType=>{
         if (req.files && req.files[imageType]) {
           const path = req.files[imageType][0].path;
-          req.place.updateImage(path,imageType);
+          promises.push(req.place.updateImage(path,imageType));
         }
       });
 
       Promise.all(promises).then(results=>{
-        console.log(results);  
+        console.log(results);
         res.json(req.place);
       }).catch(err=>{
         console.log(err);
