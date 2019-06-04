@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const dbName = 'curso_api';
+const dbName = 'curso_api_sp';
 const port = 27017;
 
 module.exports = {

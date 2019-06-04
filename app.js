@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(findAppBySecret);
 app.use(findAppByApplicationId);
-app.use(authApp.unless({method: 'OPTIONS'}));
+//app.use(authApp.unless({method: 'OPTIONS'})); //Linea de seguridad app
 
 app.use(allowCORs.unless({path: '/public'}));
 
